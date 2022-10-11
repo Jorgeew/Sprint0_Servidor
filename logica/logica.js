@@ -35,13 +35,15 @@ module.exports = class Logica {
 			)
 		})
 	} // ()
+
+	/*
 	// .................................................................
 	// borrarFilasDeTodasLasTablas() -->
 	// .................................................................
 	async borrarFilasDeTodasLasTablas() {
 		await this.borrarFilasDe("medicion")
 	} // ()
-	
+	*/
 
 	// .................................................................
 	// datos:{id: null, valor: R, fehca: Texto, nombreSensor: Texto, longitud: R, latitud: R}

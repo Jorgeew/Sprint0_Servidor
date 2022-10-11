@@ -50,11 +50,26 @@ describe("Test 1: Funcionamiento de la logica", function () {
 					latitud: 0,
 				}
             )
-			var res = await laLogica.buscarMedicionConID("14")
+			var res = await laLogica.buscarMedicionConID("22")
 			//assert.equal(res.length, 1, "¿no hay un resulado?")  // -->  (a, b, c) -> if (a!=b) --> return c 
 			assert.equal(res[0].valor, 2, "¿no es 32?")
 			
 
+		} catch (error) {
+			error = err;
+		}
+	})
+
+	  // it
+	// ....................................................
+	// ....................................................
+
+	it("puedo mostrar todas las medicion", async function () {
+		try {
+			var res = await laLogica.mostrarTodasMediciones()
+			assert.equal(res[0].id, 8, "¿no es 1?")
+			assert.equal(res[0].valor, 55, "¿no es 12?")  // el assert es un if 
+           
 		} catch (error) {
 			error = err;
 		}
@@ -66,22 +81,7 @@ describe("Test 1: Funcionamiento de la logica", function () {
 
 	it("puedo borrar el daton que he añadido", async function () {
 		try {
-			await laLogica.borrarFilasConID("medicion","14")
-		} catch (error) {
-			error = err;
-		}
-	})
-
-    // it
-	// ....................................................
-	// ....................................................
-
-	it("puedo mostrar todas las medicion", async function () {
-		try {
-			var res = await laLogica.mostrarTodasMediciones()
-			assert.equal(res[0].id, 8, "¿no es 1?")
-			assert.equal(res[0].valor, 55, "¿no es 12?")  // el assert es un if 
-           
+			await laLogica.borrarFilasConID("medicion","22")
 		} catch (error) {
 			error = err;
 		}

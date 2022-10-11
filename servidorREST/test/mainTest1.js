@@ -14,7 +14,7 @@ const IP_PUERTO = "http://localhost:8080"
 // --------------------------------------------------------------------------------
 describe("Test 1: prueba funcionamiento (recuerda arrancar el servidor)", function () {
 
-
+	
 	// ........................................................................... 
 	// .1 
 	// ........................................................................... 
@@ -73,7 +73,7 @@ describe("Test 1: prueba funcionamiento (recuerda arrancar el servidor)", functi
 
 		request.delete(
 			{
-				url: IP_PUERTO + "/borrarConID/19" ,
+				url: IP_PUERTO + "/borrarConID/23" ,
 				headers: { 'User-Agent': 'Jorge'},
 			},
 			function (err, respuesta, carga) {
