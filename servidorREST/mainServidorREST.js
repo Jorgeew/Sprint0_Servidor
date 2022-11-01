@@ -5,10 +5,14 @@
 var cors = require('cors')
 const express = require('express')
 const bodyParser = require('body-parser')
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
+
 
 const fs = require('fs')
 
 const Logica = require("../logica/logica.js")
+const { log } = require('console')
 
 // --------------------------------------------------------------------------------
 // En vez de tener que instalar una regla para cada función de la lógica
@@ -28,6 +32,15 @@ function cargarReglasUniversales(servidorExpress, laLogica) {
 	// .......................................................
 	// Reglas del API REST
 	// .......................................................
+
+	servidorExpress.post("/send-email", async function (peticion, respuesta) {
+		console.log(" * POST /send-email")
+		await laLogica.enviarCorreo()
+		console.log("Hecho");
+		respuesta.send("OK")
+	})
+	// () 
+
 	
 	// .......................................................
 	// GET /medicion/<id>
@@ -86,6 +99,46 @@ function cargarReglasUniversales(servidorExpress, laLogica) {
 	// () 
 
 	// .......................................................
+	// POST /insertarUsuario
+	// .......................................................
+
+	servidorExpress.post("/insertarUsuario", async function (peticion, respuesta) {
+		console.log(" * POST /insertarMedicion")
+		var datos = JSON.parse(peticion.body)
+		//console.log(datos.id)
+		console.log(datos.correo)
+		console.log(datos.telefono)
+		console.log(datos.nombre)
+		console.log(datos.apellidos)
+		console.log(datos.estado)
+
+		await laLogica.insertarUsuario(datos)
+		console.log("Hecho");
+		respuesta.send("OK")
+	})
+	// () 
+
+	// .......................................................
+	// GET /usuario/<correo>
+	// .......................................................
+	servidorExpress.get("/usuario/:correo", async function (peticion, respuesta) {
+		console.log(" * GET /usuario correo ")
+		// averiguo el id
+		var correo = peticion.params.correo
+		// llamo a la función adecuada de la lógica
+		var res = await laLogica.buscarUsuario(correo)
+		console.log(res);
+		// si el array de resultados no tiene una casilla ...
+		if (res.length != 1) {
+			// 404: not found
+			respuesta.status(404).send("no encontré id: " + id)
+			return
+		}
+		// todo ok
+		respuesta.send(JSON.stringify(res[0]))
+	}) // get /medicion id
+
+	// .......................................................
 	// DELETE /insertarMedicion
 	// .......................................................
 
@@ -99,6 +152,41 @@ function cargarReglasUniversales(servidorExpress, laLogica) {
 		respuesta.send("OK")
 	})
 	// () 
+
+	
+	//Token
+	servidorExpress.post("/auth/:correo", async function (peticion, res) {
+		console.log(" * GET /auth ")
+		var correo = peticion.params.correo
+
+    	//Consultar bd y validar que existen
+    	const user ={username:correo}
+
+		const accessToken = laLogica.generateAccessToken(user)
+		res.header("authorization", accessToken).json({
+			message: "Usuario permitido",
+			token: 32
+		})
+		//res.send(JSON.stringify(res[0]))
+
+	}) // get /medicion id
+
+	servidorExpress.get("/api", async function (peticion, res) {
+		laLogica.validateToken()
+		console.log("Esto es seguro");
+		res.send(JSON.stringify(res[0]))
+
+	}) // get /medicion id
+
+	//Desencriptar
+	servidorExpress.post("/desencriptar/:datos", async function (peticion, res) {
+		console.log(" * POST /desencriptar ")
+		var datos = JSON.parse(peticion.body)
+		var res2 = await laLogica.desencriptar(datos)
+		res.send(JSON.stringify(res2))
+
+	}) // get /medicion id
+
 
 } // ()
 
